@@ -21,11 +21,7 @@ class App {
   }
 
   initialize = (): void => {
-    const container = document.createElement('div');
-    container.className = 'container my-5';
-    container.innerHTML = 'Laukiu kol būsiu sukurtas';
-
-    this.htmlElement.append(container);
+  this.htmlElement.innerHTML = 'Laukiu kol būsiu sukurtas';
   };
 }
 
