@@ -1,4 +1,5 @@
-const brands = [{
+import Brand from '../types/brand';
+const brands: Brand[] = [{
   id: '1',
   title: 'Opel',
 }, {

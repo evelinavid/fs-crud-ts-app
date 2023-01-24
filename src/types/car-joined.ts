@@ -1,7 +1,8 @@
-import Car from "./car.js";
+import Car from './car';
 
-type CarJoined = Car & {
-    brand: string
+type CarJoined = Omit<Car, 'modelId'> & {
+    brand: string,
+    model:string,
 };
 
 export default CarJoined;

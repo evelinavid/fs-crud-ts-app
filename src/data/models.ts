@@ -1,4 +1,5 @@
-const models = [{
+import Model from '../types/model';
+const models: Model[] = [{
   id: '1',
   title: 'Zafira',
   brandId: '1',
