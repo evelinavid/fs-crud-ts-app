@@ -36,7 +36,11 @@ class App {
       },
       rowsData: this.carsCollection.all.map(stringifyProps),
     });
-  this.htmlElement.append(table.htmlElement);
+    const container = document.createElement('div');
+    container.className = 'container my-5';
+    container.appendChild(table.htmlElement);
+
+    this.htmlElement.append(container);
   };
 }
 
