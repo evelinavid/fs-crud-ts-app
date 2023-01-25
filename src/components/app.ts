@@ -2,6 +2,7 @@ import CarsCollection from '../helpers/cars-collection';
 import cars from '../data/cars';
 import models from '../data/models';
 import brands from '../data/brands';
+import Table from './table';
 
 class App {
   private htmlElement: HTMLElement;
@@ -18,10 +19,25 @@ class App {
 
     this.htmlElement = foundElement;
     this.carsCollection = new CarsCollection({ cars, brands, models });
+    console.log(this.carsCollection);
   }
 
   initialize = (): void => {
-  this.htmlElement.innerHTML = 'Laukiu kol būsiu sukurtas';
+    const table = new Table({
+      title: 'Visi automobiliai',
+      columns: {
+        id: 'pavadinimas',
+        brand: 'Marke',
+        model: 'modelis',
+      },
+      rowsData: [
+        { id: 'Auto', brand: 'Opel', model: 'Astra' },
+        { id: 'Auto', brand: 'Opel', model: 'Astra' },
+        { id: 'Auto', brand: 'Opel', model: 'Astra' },
+        { id: 'Auto', brand: 'Opel', model: 'Astra' },
+      ],
+    });
+  this.htmlElement.append(table.htmlElement);
   };
 }
 
