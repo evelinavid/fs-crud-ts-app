@@ -3,6 +3,7 @@ import cars from '../data/cars';
 import models from '../data/models';
 import brands from '../data/brands';
 import Table from './table';
+import stringifyProps from '../helpers/stringify-props';
 
 class App {
   private htmlElement: HTMLElement;
@@ -13,6 +14,7 @@ class App {
     const foundElement = document.querySelector<HTMLElement>(selector);
 
     if (foundElement === null) throw new Error(`Nerastas elementas su selektoriumi '${selector}'`);
+
     if (!(foundElement instanceof HTMLElement)) {
       throw new Error('Turi būti HTML elementas');
     }
@@ -26,16 +28,13 @@ class App {
     const table = new Table({
       title: 'Visi automobiliai',
       columns: {
-        id: 'pavadinimas',
-        brand: 'Marke',
-        model: 'modelis',
+        id: 'Id',
+        brand: 'Markė',
+        model: 'Modelis',
+        price: 'Kaina',
+        year: 'Metai',
       },
-      rowsData: [
-        { id: 'Auto', brand: 'Opel', model: 'Astra' },
-        { id: 'Auto', brand: 'Opel', model: 'Astra' },
-        { id: 'Auto', brand: 'Opel', model: 'Astra' },
-        { id: 'Auto', brand: 'Opel', model: 'Astra' },
-      ],
+      rowsData: this.carsCollection.all.map(stringifyProps),
     });
   this.htmlElement.append(table.htmlElement);
   };
