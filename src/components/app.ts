@@ -49,6 +49,7 @@ class App {
         year: 'Metai',
       },
       rowsData: this.carsCollection.all.map(stringifyProps),
+      onDelete: this.handleDeleteCar,
     });
   }
 
@@ -58,6 +59,11 @@ class App {
     this.update();
     // const filteredBrands = this.carsCollection.getByBrandId(brandId);
     // console.table(filteredBrands);
+  };
+
+  // eslint-disable-next-line class-methods-use-this
+  handleDeleteCar = (carId: string) => {
+    console.log({ carId });
   };
 
   initialize = () => {

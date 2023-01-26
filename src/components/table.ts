@@ -8,6 +8,7 @@ export type TableProps<Type extends RowData> = {
     title: string,
     columns: Type,
     rowsData: Type[],
+    onDelete: (id: string) => void,
 };
 
 class Table<Type extends RowData> {
@@ -54,22 +55,32 @@ class Table<Type extends RowData> {
         </tr>
         <tr>
        ${thElementsString}
+       <th></th>
         </tr>
         `;
     };
 
     renderBody = () => {
-        const trsHtmlStr = this.props.rowsData
+        const rows = this.props.rowsData
             .map((rowData) => {
-                const tdsHtmlString = Object.keys(this.props.columns)
-                    .map((key) => `<td>${rowData[key]}</td>`)
-                    .join('');
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'btn btn-danger';
+                deleteButton.innerText = 'Delete';
+                deleteButton.addEventListener('click', () => this.props.onDelete(rowData.id));
 
-                return `<tr>${tdsHtmlString}</tr>`;
-            })
-            .join('');
+                const td = document.createElement('td');
+                td.append(deleteButton);
 
-        this.tbody.innerHTML = trsHtmlStr;
+                const tr = document.createElement('tr');
+                tr.innerHTML = Object.keys(this.props.columns)
+                .map((key) => `<td>${rowData[key]}</td>`)
+                .join('');
+                tr.append(td);
+
+                return tr;
+            });
+
+        this.tbody.append(...rows);
     };
 
     initialize() {
