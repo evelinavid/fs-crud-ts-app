@@ -35,10 +35,10 @@ class Table<Type extends RowData> {
         this.thead = document.createElement('thead');
         this.tbody = document.createElement('tbody');
         this.initialize();
-        console.log(this.props);
+        this.renderView();
     }
 
-    initializeHead = () => {
+    renderHead = () => {
         const { title, columns } = this.props;
 
         const thElementsString = Object.values(columns)
@@ -58,7 +58,7 @@ class Table<Type extends RowData> {
         `;
     };
 
-    initializeBody = () => {
+    renderBody = () => {
         const trsHtmlStr = this.props.rowsData
             .map((rowData) => {
                 const tdsHtmlString = Object.keys(this.props.columns)
@@ -73,9 +73,6 @@ class Table<Type extends RowData> {
     };
 
     initialize() {
-        this.initializeBody();
-        this.initializeHead();
-
         this.htmlElement.className = 'table table-striped';
 
         this.htmlElement.append(
@@ -83,6 +80,19 @@ class Table<Type extends RowData> {
             this.thead,
         );
     }
+
+    renderView = () => {
+        this.renderBody();
+        this.renderHead();
+    };
+
+    updateProps = (props: Partial<TableProps<Type>>) => {
+    this.props = {
+    ...this.props,
+    ...props,
+    };
+    this.renderView();
+    };
 }
 
 export default Table;
