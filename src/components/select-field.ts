@@ -4,7 +4,7 @@ export type Option = {
 };
 type SelectFielProps = {
     options:Option[],
-    onChange:()=> void;
+    onChange:(value:string)=> void;
 };
 
 class SelectField {
@@ -24,7 +24,8 @@ initialize = () => {
     .map(({ value, text }) => `<option value="${value}">${text}</option>`)
     .join('');
 
-    this.htmlElement.addEventListener('change', () => this.props.onChange());
+    this.htmlElement.addEventListener('change',
+     () => this.props.onChange(this.htmlElement.value));
 };
 }
 

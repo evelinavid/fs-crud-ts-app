@@ -7,7 +7,7 @@ import stringifyProps from '../helpers/stringify-props';
 import SelectField, { type Option } from './select-field';
 import type Brand from '../types/brand';
 
-const getByBrandId = ({ id, title }: Brand):Option => ({
+const brandValues = ({ id, title }: Brand):Option => ({
   value: id,
   text: title,
 });
@@ -31,14 +31,15 @@ class App {
     console.log(this.carsCollection);
   }
 
-  handleBrandChange = () => {
-    console.log(this);
-     console.log('pasikeite selectas');
+  // eslint-disable-next-line class-methods-use-this
+  handleBrandChange = (brandId:string) => {
+    const filteredBrands = this.carsCollection.getByBrandId(brandId)
+    console.table(filteredBrands);
   };
 
   initialize() {
     const select = new SelectField({
-      options: brands.map(getByBrandId),
+      options: brands.map(brandValues),
       onChange: this.handleBrandChange,
     });
 
