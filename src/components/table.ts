@@ -61,6 +61,7 @@ class Table<Type extends RowData> {
     };
 
     renderBody = () => {
+        this.tbody.innerHTML = '';
         const rows = this.props.rowsData
             .map((rowData) => {
                 const deleteButton = document.createElement('button');

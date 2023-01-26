@@ -54,6 +54,10 @@ class CarsCollection {
         }
         return brandFind;
     };
+
+    deleteCarById = (carId: string) => {
+        this.props.cars = this.props.cars.filter((car) => car.id !== carId);
+    };
 }
 
 export default CarsCollection;

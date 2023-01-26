@@ -53,7 +53,6 @@ class App {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
   handleBrandChange = (brandId:string) => {
     this.selectedBrandId = brandId;
     this.update();
@@ -61,9 +60,9 @@ class App {
     // console.table(filteredBrands);
   };
 
-  // eslint-disable-next-line class-methods-use-this
   handleDeleteCar = (carId: string) => {
-    console.log({ carId });
+    this.carsCollection.deleteCarById(carId);
+    this.update();
   };
 
   initialize = () => {
