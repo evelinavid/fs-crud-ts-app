@@ -18,6 +18,8 @@ class App {
 
   private selectedBrandId: null | string;
 
+  private editedCarId: null | string;
+
   private brandSelect: SelectField;
 
   private carsCollection: CarsCollection;
@@ -34,6 +36,7 @@ class App {
     if (!(foundElement instanceof HTMLElement)) {
       throw new Error('Turi būti HTML elementas');
     }
+    this.editedCarId = null;
     this.selectedBrandId = null;
     this.htmlElement = foundElement;
     this.carsCollection = new CarsCollection({ cars, brands, models });
@@ -49,6 +52,8 @@ class App {
       },
       rowsData: this.carsCollection.all.map(stringifyProps),
       onDelete: this.handleDeleteCar,
+      onEdit: this.handleEditCar,
+      editedCarId: this.editedCarId,
     });
 
     this.brandSelect = new SelectField({
@@ -71,6 +76,7 @@ class App {
       },
       submitBtnText: 'Sukurti',
       onSubmit: this.handleCreateCar,
+
     });
   }
 
@@ -99,7 +105,14 @@ class App {
     this.renderView();
   };
 
- public initialize = () => {
+  // eslint-disable-next-line class-methods-use-this
+  private handleEditCar = (carId: string) => {
+    this.editedCarId = carId === this.editedCarId ? null : carId;
+
+    this.renderView();
+  };
+
+  public initialize = () => {
     const uxContainer = document.createElement('div');
     uxContainer.className = 'd-flex gap-4 align-items-start';
     uxContainer.append(
@@ -118,11 +131,12 @@ class App {
     this.htmlElement.append(container);
   };
 
- private renderView = () => {
+  private renderView = () => {
     if (this.selectedBrandId === null) {
       this.carsTable.updateProps({
         title: ALL_BRANDS_TITLE,
         rowsData: this.carsCollection.all.map(stringifyProps),
+        editedCarId: this.editedCarId,
       });
     } else {
       const brand = brands.find((b) => b.id === this.selectedBrandId);
@@ -132,6 +146,8 @@ class App {
         title: `${brand.title} markės automobiliai`,
         rowsData: this.carsCollection.getByBrandId(this.selectedBrandId)
           .map(stringifyProps),
+        editedCarId: this.editedCarId,
+
       });
     }
   };

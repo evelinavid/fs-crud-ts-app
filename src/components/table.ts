@@ -8,7 +8,9 @@ export type TableProps<Type extends RowData> = {
     title: string,
     columns: Type,
     rowsData: Type[],
+    editedCarId: string | null,
     onDelete: (id: string) => void,
+    onEdit: (id: string) => void,
 };
 
 class Table<Type extends RowData> {
@@ -39,7 +41,7 @@ class Table<Type extends RowData> {
         this.renderView();
     }
 
-   private renderHead = () => {
+    private renderHead = () => {
         const { title, columns } = this.props;
 
         const thElementsString = Object.values(columns)
@@ -60,19 +62,31 @@ class Table<Type extends RowData> {
         `;
     };
 
-   private renderBody = () => {
+    private renderBody = () => {
         this.tbody.innerHTML = '';
         const rows = this.props.rowsData
             .map((rowData) => {
+                const thisRowIsEdited = this.props.editedCarId === rowData.id;
+
                 const deleteButton = document.createElement('button');
                 deleteButton.className = 'btn btn-danger';
                 deleteButton.innerText = 'Delete';
                 deleteButton.addEventListener('click', () => this.props.onDelete(rowData.id));
 
+                const updateButton = document.createElement('button');
+                updateButton.className = `btn btn-${thisRowIsEdited ? 'secondary' : 'warning'}`;
+                updateButton.innerText = 'Update';
+                updateButton.innerText = thisRowIsEdited ? 'Cancel' : 'Update';
+                const buttonContainer = document.createElement('td');
+                buttonContainer.className = 'd-flex justify-content-end gap-2';
+                buttonContainer.append(updateButton, deleteButton);
+                buttonContainer.addEventListener('click', () => this.props.onEdit(rowData.id));
+
                 const td = document.createElement('td');
-                td.append(deleteButton);
+                td.append(buttonContainer);
 
                 const tr = document.createElement('tr');
+                if (thisRowIsEdited) tr.classList.add('row-active');
                 tr.innerHTML = Object.keys(this.props.columns)
                     .map((key) => `<td>${rowData[key]}</td>`)
                     .join('');
@@ -93,12 +107,12 @@ class Table<Type extends RowData> {
         );
     }
 
-   private renderView = () => {
+    private renderView = () => {
         this.renderBody();
         this.renderHead();
     };
 
-   public updateProps = (props: Partial<TableProps<Type>>) => {
+    public updateProps = (props: Partial<TableProps<Type>>) => {
         this.props = {
             ...this.props,
             ...props,
