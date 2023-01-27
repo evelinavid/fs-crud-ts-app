@@ -28,7 +28,7 @@ class TextField {
         this.renderView();
     }
 
-    initialize = () => {
+    private initialize = () => {
         this.label.htmlFor = this.id;
         this.label.className = 'form-label';
 
@@ -41,18 +41,18 @@ class TextField {
         );
     };
 
-    renderView = () => {
+    private renderView = () => {
         const { labelText, value, name } = this.props;
 
         this.label.innerText = labelText;
 
         if (value) {
             this.input.value = value;
-}
+        }
         this.input.name = name;
     };
 
-    updateProps = (props: Partial<TextFieldProps>) => {
+    public updateProps = (props: Partial<TextFieldProps>) => {
         this.props = {
             ...this.props,
             ...props,

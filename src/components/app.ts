@@ -84,12 +84,12 @@ class App {
   private handleBrandChange = (brandId: string) => {
     const brand = brands.find((b) => b.id === brandId);
     this.selectedBrandId = brand ? brandId : null;
-    this.renderView();
+    this.update();
   };
 
   private handleDeleteCar = (carId: string) => {
     this.carsCollection.deleteCarById(carId);
-    this.renderView();
+    this.update();
   };
 
   private handleCreateCar = ({
@@ -103,21 +103,20 @@ class App {
     };
 
     this.carsCollection.add(carProps);
-    this.renderView();
+    this.update();
   };
 
-  // eslint-disable-next-line class-methods-use-this
   private handleEditCar = (carId: string) => {
     this.editedCarId = carId === this.editedCarId ? null : carId;
 
-    this.renderView();
+    this.update();
   };
 
   private handleUpdateCar = ({
     brand, model, price, year,
   }: Values) => {
     if (this.editedCarId) {
-      const carProps:CarProps = {
+      const carProps: CarProps = {
         brandId: brand,
         modelId: model,
         price: Number(price),
@@ -127,30 +126,11 @@ class App {
       this.carsCollection.updateCar(this.editedCarId, carProps);
       this.editedCarId = null;
 
-      this.renderView();
+      this.update();
     }
   };
 
-  public initialize = () => {
-    const uxContainer = document.createElement('div');
-    uxContainer.className = 'd-flex gap-4 align-items-start';
-    uxContainer.append(
-      this.carsTable.htmlElement,
-      this.carForm.htmlElement,
-    );
-
-    const container = document.createElement('div');
-    container.className = 'container d-flex flex-column my-5 gap-3';
-
-    container.append(
-      this.brandSelect.htmlElement,
-      uxContainer,
-    );
-
-    this.htmlElement.append(container);
-  };
-
-  private renderView = () => {
+  private update = () => {
     if (this.selectedBrandId === null) {
       this.carsTable.updateProps({
         title: ALL_BRANDS_TITLE,
@@ -169,7 +149,10 @@ class App {
 
       });
     }
+    this.carUpdateFormData();
+  };
 
+  private carUpdateFormData = () => {
     if (this.editedCarId) {
       const editedCar = cars.find((c) => c.id === this.editedCarId);
       if (!editedCar) {
@@ -195,20 +178,39 @@ class App {
         onSubmit: this.handleUpdateCar,
       });
     } else {
-        const initialBrandId = brands[0].id;
-        this.carForm.updateProps({
-          title: 'Sukurti nauj1 automobili',
-          submitBtnText: 'Sukurti ',
-          status: 'create',
-          values: {
-            brand: initialBrandId,
-            model: models.filter((m) => m.brandId === initialBrandId)[0].id,
-            price: '',
-            year: '',
-          },
-          onSubmit: this.handleCreateCar,
-        });
+      const initialBrandId = brands[0].id;
+      this.carForm.updateProps({
+        title: 'Sukurkite naują automobilį',
+        submitBtnText: 'Sukurti ',
+        status: 'create',
+        values: {
+          brand: initialBrandId,
+          model: models.filter((m) => m.brandId === initialBrandId)[0].id,
+          price: '',
+          year: '',
+        },
+        onSubmit: this.handleCreateCar,
+      });
     }
+  };
+
+  public initialize = () => {
+    const uxContainer = document.createElement('div');
+    uxContainer.className = 'd-flex gap-4 align-items-start';
+    uxContainer.append(
+      this.carsTable.htmlElement,
+      this.carForm.htmlElement,
+    );
+
+    const container = document.createElement('div');
+    container.className = 'container d-flex flex-column my-5 gap-3';
+
+    container.append(
+      this.brandSelect.htmlElement,
+      uxContainer,
+    );
+
+    this.htmlElement.append(container);
   };
 }
 

@@ -44,10 +44,6 @@ class SelectField {
             this.label,
             this.select,
         );
-
-        // this.htmlElement.innerHTML = this.props.options
-        //     .map(({ value, text }) => `<option value="${value}">${text}</option>`)
-        //     .join('');
     };
 
     private renderSelectOptionsView = () => {
