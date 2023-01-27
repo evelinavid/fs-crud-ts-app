@@ -29,7 +29,7 @@ class Table<Type extends RowData> {
     constructor(props: TableProps<Type>) {
         if (!Table.propsAreValid(props)) {
             throw new Error('TableProps are not compatible. Please check columns and rowsData');
-          }
+        }
         this.props = props;
 
         this.htmlElement = document.createElement('table');
@@ -74,8 +74,8 @@ class Table<Type extends RowData> {
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = Object.keys(this.props.columns)
-                .map((key) => `<td>${rowData[key]}</td>`)
-                .join('');
+                    .map((key) => `<td>${rowData[key]}</td>`)
+                    .join('');
                 tr.append(td);
 
                 return tr;
@@ -99,11 +99,11 @@ class Table<Type extends RowData> {
     };
 
     updateProps = (props: Partial<TableProps<Type>>) => {
-    this.props = {
-    ...this.props,
-    ...props,
-    };
-    this.renderView();
+        this.props = {
+            ...this.props,
+            ...props,
+        };
+        this.renderView();
     };
 }
 

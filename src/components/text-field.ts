@@ -1,7 +1,7 @@
 export type TextFieldProps = {
     labelText: string,
     name: string,
-    value: string,
+    value?: string,
 };
 class TextField {
     private static count: number = 0;
@@ -42,10 +42,14 @@ class TextField {
     };
 
     renderView = () => {
-        this.label.innerText = this.props.labelText;
+        const { labelText, value, name } = this.props;
 
-        this.input.value = this.props.value;
-        this.input.name = this.props.name;
+        this.label.innerText = labelText;
+
+        if (value) {
+            this.input.value = value;
+}
+        this.input.name = name;
     };
 
     updateProps = (props: Partial<TextFieldProps>) => {

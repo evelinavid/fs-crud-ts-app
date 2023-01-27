@@ -1,31 +1,30 @@
-import CarsCollection from '../helpers/cars-collection';
+import CarsCollection, { CarProps } from '../helpers/cars-collection';
 import cars from '../data/cars';
 import models from '../data/models';
 import brands from '../data/brands';
 import Table from './table';
 import stringifyProps, { StringifyObjectProps } from '../helpers/stringify-props';
-import SelectField, { type Option } from './select-field';
-import type Brand from '../types/brand';
+import SelectField from './select-field';
 import CarJoined from '../types/car-joined';
+import CarForm, { Values } from './car-form';
 
 const ALL_BRANDS_ID = '-1' as const;
 const ALL_BRANDS_TITLE = 'Visi automobiliai' as const;
 
 type CarTableRow = StringifyObjectProps<Required<CarJoined>>;
 
-const brandValues = ({ id, title }: Brand):Option => ({
-  value: id,
-  text: title,
-});
-
 class App {
   private htmlElement: HTMLElement;
 
-  private selectedBrandId:string;
+  private selectedBrandId: null | string;
+
+  private brandSelect: SelectField;
 
   private carsCollection: CarsCollection;
 
   private carsTable: Table<CarTableRow>;
+
+  private carForm: CarForm;
 
   constructor(selector: string) {
     const foundElement = document.querySelector<HTMLElement>(selector);
@@ -35,7 +34,7 @@ class App {
     if (!(foundElement instanceof HTMLElement)) {
       throw new Error('Turi būti HTML elementas');
     }
-    this.selectedBrandId = ALL_BRANDS_ID;
+    this.selectedBrandId = null;
     this.htmlElement = foundElement;
     this.carsCollection = new CarsCollection({ cars, brands, models });
 
@@ -51,41 +50,75 @@ class App {
       rowsData: this.carsCollection.all.map(stringifyProps),
       onDelete: this.handleDeleteCar,
     });
-  }
 
-  handleBrandChange = (brandId:string) => {
-    this.selectedBrandId = brandId;
-    this.update();
-    // const filteredBrands = this.carsCollection.getByBrandId(brandId);
-    // console.table(filteredBrands);
-  };
-
-  handleDeleteCar = (carId: string) => {
-    this.carsCollection.deleteCarById(carId);
-    this.update();
-  };
-
-  initialize = () => {
-    const select = new SelectField({
+    this.brandSelect = new SelectField({
+      labelText: '',
       options: [
-        { value: ALL_BRANDS_ID, text: ALL_BRANDS_TITLE },
-        ...brands.map(brandValues),
+        { title: ALL_BRANDS_TITLE, value: ALL_BRANDS_ID },
+        ...brands.map(({ id, title }) => ({ title, value: id })),
       ],
       onChange: this.handleBrandChange,
     });
 
+    const initialBrandId = brands[0].id;
+    this.carForm = new CarForm({
+      title: 'Sukurkite naują automobilį',
+      values: {
+        brand: initialBrandId,
+        model: models.filter((m) => m.brandId === initialBrandId)[0].id,
+        price: '0',
+        year: '2000',
+      },
+      submitBtnText: 'Sukurti',
+      onSubmit: this.handleCreateCar,
+    });
+  }
+
+  private handleBrandChange = (brandId: string) => {
+    this.selectedBrandId = brandId;
+    this.renderView();
+  };
+
+  private handleDeleteCar = (carId: string) => {
+    this.carsCollection.deleteCarById(carId);
+    this.renderView();
+  };
+
+  private handleCreateCar = ({
+    brand, model, price, year,
+  }: Values): void => {
+    const carProps: CarProps = {
+      brandId: brand,
+      modelId: model,
+      price: Number(price),
+      year: Number(year),
+    };
+
+    this.carsCollection.add(carProps);
+    this.renderView();
+  };
+
+  initialize = () => {
+    const uxContainer = document.createElement('div');
+    uxContainer.className = 'd-flex gap-4 align-items-start';
+    uxContainer.append(
+      this.carsTable.htmlElement,
+      this.carForm.htmlElement,
+    );
+
     const container = document.createElement('div');
     container.className = 'container d-flex flex-column my-5 gap-3';
+
     container.append(
-      select.htmlElement,
-      this.carsTable.htmlElement,
-       );
+      this.brandSelect.htmlElement,
+      uxContainer,
+    );
 
     this.htmlElement.append(container);
   };
 
-  update = () => {
-    if (this.selectedBrandId === ALL_BRANDS_ID) {
+  renderView = () => {
+    if (this.selectedBrandId === null) {
       this.carsTable.updateProps({
         title: ALL_BRANDS_TITLE,
         rowsData: this.carsCollection.all.map(stringifyProps),
@@ -95,7 +128,7 @@ class App {
       this.carsTable.updateProps({
         title: `${brand.title} markės automobiliai`,
         rowsData: this.carsCollection.getByBrandId(this.selectedBrandId)
-        .map(stringifyProps),
+          .map(stringifyProps),
       });
     }
   };
