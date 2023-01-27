@@ -7,6 +7,7 @@ import stringifyProps, { StringifyObjectProps } from '../helpers/stringify-props
 import SelectField from './select-field';
 import CarJoined from '../types/car-joined';
 import CarForm, { Values } from './car-form';
+import Car from '../types/car';
 
 const ALL_BRANDS_ID = '-1' as const;
 const ALL_BRANDS_TITLE = 'Visi automobiliai' as const;
@@ -76,6 +77,7 @@ class App {
       },
       submitBtnText: 'Sukurti',
       onSubmit: this.handleCreateCar,
+      status: 'create',
 
     });
   }
@@ -110,6 +112,24 @@ class App {
     this.editedCarId = carId === this.editedCarId ? null : carId;
 
     this.renderView();
+  };
+
+  private handleUpdateCar = ({
+    brand, model, price, year,
+  }: Values) => {
+    if (this.editedCarId) {
+      const carProps:CarProps = {
+        brandId: brand,
+        modelId: model,
+        price: Number(price),
+        year: Number(year),
+      };
+
+      this.carsCollection.updateCar(this.editedCarId, carProps);
+      this.editedCarId = null;
+
+      this.renderView();
+    }
   };
 
   public initialize = () => {
@@ -147,6 +167,55 @@ class App {
         rowsData: this.carsCollection.getByBrandId(this.selectedBrandId)
           .map(stringifyProps),
         editedCarId: this.editedCarId,
+
+      });
+    }
+
+    if (this.editedCarId) {
+      const editedCar = cars.find((c) => c.id === this.editedCarId);
+      if (!editedCar) {
+        alert('Nėra rasta mašina kurią bandote redaguoti');
+        return;
+      }
+      const model = models.find((m) => m.id === editedCar.modelId);
+      if (!model) {
+        alert('Nėra rasta mašina kurią bandote redaguoti');
+        return;
+      }
+
+      this.carForm.updateProps({
+        title: 'Automobilio atnaujinimas',
+        submitBtnText: 'Atnaujinti',
+        status: 'update',
+        values: {
+          brand: model.brandId,
+          model: model.id,
+          price: String(editedCar.price),
+          year: String(editedCar.year),
+        },
+        onSubmit: this.handleUpdateCar,
+      });
+    } else {
+        const initialBrandId = brands[0].id;
+        this.carForm.updateProps({
+          title: 'Sukurti nauj1 automobili',
+          submitBtnText: 'Sukurti ',
+          status: 'create',
+          values: {
+            brand: initialBrandId,
+            model: models.filter((m) => m.brandId === initialBrandId)[0].id,
+            price: '',
+            year: '',
+          },
+          onSubmit: this.handleCreateCar,
+        });
+
+
+
+
+
+
+
 
       });
     }
