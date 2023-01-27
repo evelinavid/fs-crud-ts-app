@@ -7,7 +7,6 @@ import stringifyProps, { StringifyObjectProps } from '../helpers/stringify-props
 import SelectField from './select-field';
 import CarJoined from '../types/car-joined';
 import CarForm, { Values } from './car-form';
-import Car from '../types/car';
 
 const ALL_BRANDS_ID = '-1' as const;
 const ALL_BRANDS_TITLE = 'Visi automobiliai' as const;
@@ -209,15 +208,6 @@ class App {
           },
           onSubmit: this.handleCreateCar,
         });
-
-
-
-
-
-
-
-
-      });
     }
   };
 }
