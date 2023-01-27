@@ -29,9 +29,9 @@ class CarForm {
 
     private fields: Fields;
 
-    private container: HTMLDivElement;
-
     private heading: HTMLHeadingElement;
+
+    private container: HTMLDivElement;
 
     private submitButton: HTMLButtonElement;
 
@@ -45,22 +45,22 @@ class CarForm {
 
         this.fields = {
             brand: new SelectField({
-                labelText: 'Markė',
                 name: 'brand',
+                labelText: 'Markė',
                 options: brands.map(({ id, title }) => ({ title, value: id })),
             }),
             model: new SelectField({
-                labelText: 'Modelis',
                 name: 'model',
+                labelText: 'Modelis',
                 options: models.map(({ id, title }) => ({ title, value: id })),
             }),
             price: new TextField({
-                labelText: 'Kaina',
                 name: 'price',
+                labelText: 'Kaina',
             }),
             year: new TextField({
-                labelText: 'Metai',
                 name: 'year',
+                labelText: 'Metai',
             }),
         };
 
@@ -112,7 +112,7 @@ class CarForm {
         onSubmit(formValues);
     };
 
-    renderView = () => {
+    private renderView = () => {
         const { title, values, submitBtnText } = this.props;
 
         this.heading.innerHTML = title;
@@ -128,7 +128,7 @@ class CarForm {
         this.htmlElement.addEventListener('submit', this.handleSubmit);
     };
 
-    updateProps = (props: Partial<CarFormProps>) => {
+   public updateProps = (props: Partial<CarFormProps>) => {
         this.props = {
             ...this.props,
             ...props,

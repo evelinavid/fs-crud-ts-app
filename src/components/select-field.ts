@@ -41,8 +41,8 @@ class SelectField {
         this.htmlElement.className = 'form-group';
 
         this.htmlElement.append(
-            this.select,
             this.label,
+            this.select,
         );
 
         // this.htmlElement.innerHTML = this.props.options

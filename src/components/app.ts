@@ -99,7 +99,7 @@ class App {
     this.renderView();
   };
 
-  initialize = () => {
+ public initialize = () => {
     const uxContainer = document.createElement('div');
     uxContainer.className = 'd-flex gap-4 align-items-start';
     uxContainer.append(
@@ -118,7 +118,7 @@ class App {
     this.htmlElement.append(container);
   };
 
-  renderView = () => {
+ private renderView = () => {
     if (this.selectedBrandId === null) {
       this.carsTable.updateProps({
         title: ALL_BRANDS_TITLE,
