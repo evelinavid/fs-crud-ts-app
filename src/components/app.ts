@@ -75,7 +75,8 @@ class App {
   }
 
   private handleBrandChange = (brandId: string) => {
-    this.selectedBrandId = brandId;
+    const brand = brands.find((b) => b.id === brandId);
+    this.selectedBrandId = brand ? brandId : null;
     this.renderView();
   };
 
@@ -124,7 +125,9 @@ class App {
         rowsData: this.carsCollection.all.map(stringifyProps),
       });
     } else {
-      const brand = this.carsCollection.getCarTitleById(this.selectedBrandId);
+      const brand = brands.find((b) => b.id === this.selectedBrandId);
+      if (brand === undefined) throw new Error('Pasirinkta neegzistuojanti markė');
+
       this.carsTable.updateProps({
         title: `${brand.title} markės automobiliai`,
         rowsData: this.carsCollection.getByBrandId(this.selectedBrandId)

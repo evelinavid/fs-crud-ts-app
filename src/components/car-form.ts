@@ -10,8 +10,8 @@ export type Values = {
     year: string,
 };
 type CarFormProps = {
-    title: string,
     values: Values,
+    title: string,
     submitBtnText: string,
     onSubmit: (value: Values) => void,
 };
@@ -40,7 +40,7 @@ class CarForm {
 
         this.htmlElement = document.createElement('form');
         this.container = document.createElement('div');
-        this.heading = document.createElement('h2');
+        this.heading = document.createElement('h3');
         this.submitButton = document.createElement('button');
 
         this.fields = {
